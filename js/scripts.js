@@ -1,5 +1,5 @@
 // BEGIN: Global variables
-const randomUserUrl = 'https://randomuser.me/api/?results=12';
+const randomUserUrl = 'https://randomuser.me/api/?results=12&nat=us';
 const galleryDiv = document.getElementById('gallery');
 // END: Global variables
 
@@ -14,16 +14,50 @@ const randomUsers = fetchRequest(randomUserUrl).then(randomUsers => {
 
 
 // BEGIN: Handle markup generation
+
+function generateModalUI(randomUser) {
+    const modalDiv = document.createElement('div');
+    modalDiv.classList = 'modal-container';
+    document.body.appendChild(modalDiv);
+    let modalUI = `
+    
+        <div class="modal">
+            <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
+            <div class="modal-info-container">
+                <img class="modal-img" src="${randomUser.picture.medium}" alt="profile picture">
+                <h3 id="name" class="modal-name cap">${randomUser.title} ${randomUser.firsgt} ${randomUser.last}</h3>
+                <p class="modal-text">${randomUser.email}</p>
+                <p class="modal-text cap">${randomUser.location.city}</p>
+                <hr>
+                <p class="modal-text">${randomUser.cell}</p>
+                <p class="modal-text">${randomUser.location.street.number} ${randomUser.location.street.name}, ${randomUser.location.city}, ${randomUser.location.state} ${randomUser.location.postcode}</p>
+                <p class="modal-text">Birthday: ${randomUser.dob.date}</p>
+            </div>
+        </div>
+
+        // IMPORTANT: Below is only for exceeds tasks 
+        <div class="modal-btn-container">
+            <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
+            <button type="button" id="modal-next" class="modal-next btn">Next</button>
+        </div>
+    </div>
+    `;
+    modalDiv.innerHTML = modalUI;
+}
+
 function generateGalleryUI(randomUsers) {
-    console.log(randomUsers);
+    // console.log('saldf');
+    // console.log(randomUsers);
     // const htmlUIArray = [];
     randomUsers.map(randomUser => {
+        // console.log('saldfffff');
+        // console.log(randomUser);
+        // console.log(generateModalUI(randomUser));
         const cardDiv = document.createElement('div');
         cardDiv.className = 'card';
         galleryDiv.appendChild(cardDiv);
 
         let htmlUI = `
-        
             <div class="card-img-container">
                 <img class="card-img" src="${randomUser.picture.thumbnail}" alt="profile picture">
             </div>
@@ -32,10 +66,14 @@ function generateGalleryUI(randomUsers) {
                 <p class="card-text">${randomUser.email}</p>
                 <p class="card-text cap">${randomUser.location.city}, ${randomUser.location.state}</p>
             </div>
-        
         `;
         cardDiv.innerHTML = htmlUI;
+
+        cardDiv.addEventListener('click', () => {
+            generateModalUI(randomUser);
+        });
         
+
         // htmlUIArray.push(htmlUI);
     });
 
