@@ -6,7 +6,10 @@ const galleryDiv = document.getElementById('gallery');
 
 // BEGIN: Handle all fetch requests
 const randomUsers = fetchRequest(randomUserUrl).then(randomUsers => {
-    // console.log(randomUsers.results);
+    console.log(randomUsers.results[3]);
+    console.log(Object.keys(randomUsers.results[3]));
+    console.log(Object.keys(randomUsers.results));
+    console.log(randomUsers.results);
     generateGalleryUI(randomUsers.results);
 });
 
@@ -43,18 +46,29 @@ function generateModalUI(randomUser) {
     </div>
     `;
     modalDiv.innerHTML = modalUI;
+    const x_close_modal = document.getElementById('modal-close-btn');
+    x_close_modal.addEventListener('click', (e) => {
+        modalDiv.remove();
+    });
+
+    // handle next / previous click events
+    const next = document.getElementById('modal-next');
+    const prev = document.getElementById('modal-prev');
+    next.addEventListener('click', () => {
+        nextCard();
+    });
+    prev.addEventListener('click', () => {
+        prevCard();
+    });
 }
 
 function generateGalleryUI(randomUsers) {
-    // console.log('saldf');
-    // console.log(randomUsers);
-    // const htmlUIArray = [];
+    let cardId = 0;
     randomUsers.map(randomUser => {
-        // console.log('saldfffff');
-        // console.log(randomUser);
-        // console.log(generateModalUI(randomUser));
         const cardDiv = document.createElement('div');
         cardDiv.className = 'card';
+        cardDiv.id = cardId;
+        cardId ++;
         galleryDiv.appendChild(cardDiv);
 
         let htmlUI = `
@@ -72,15 +86,19 @@ function generateGalleryUI(randomUsers) {
         cardDiv.addEventListener('click', () => {
             generateModalUI(randomUser);
         });
-        
-
-        // htmlUIArray.push(htmlUI);
     });
 
 }
 // END: Handle markup generation
 
 // BEGIN: Handle events
+function nextCard() {
+    console.log('next');
+}
+
+function prevCard() {
+    console.log('previous');
+}
 // END: Handle events
 
 // BEGIN: Helper functions
