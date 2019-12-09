@@ -1,45 +1,30 @@
 // BEGIN: Global variables
 const randomUserUrl = "https://randomuser.me/api/?results=12&nat=us";
 const galleryDiv = document.getElementById("gallery");
-const galleryElements = document.querySelectorAll(".gallery");
-const searchElement = document.getElementById("search-input");
-
-let randomUsersObject = {};
-let randomUserArray = [];
 // END: Global variables
 
 // BEGIN: Handle all fetch requests
-
+let randomUsersObject = {};
+let randomUserArray = [];
 const randomUsers = fetchRequest(randomUserUrl).then(randomUser => {
+  //   console.log(randomUser.results[3]);
+  //   console.log(Object.keys(randomUser.results[3]));
+  //   console.log(Object.keys(randomUser.results));
+  //   console.log(typeof randomUser.results);
+  //   randomUsersObject = randomUsersObject.push(randomUser.results);
+  //   randomUsersObject = randomUser.results;
   generateGalleryUI(randomUser.results);
 });
+// const x = randomUsersObject;
+
+console.log("HERE HERE HERE");
+console.log("users", ...randomUserArray);
+console.log("HERE HERE HERE");
 // END: Handle all fetch requests
 
 // BEGIN: Handle markup generation
-function removeElementByClass(className) {
-  let div = document.querySelectorAll("." + className);
-  Array.from(div).forEach(d => d.remove());
-}
-function formatDate(d) {
-  let tmpDate = new Date(d);
 
-  let year = tmpDate.getFullYear();
-  let month = tmpDate.getMonth() + 1;
-  let day = tmpDate.getDate();
-
-  if (day < 10) {
-    day = "0" + day;
-  }
-
-  if (month < 10) {
-    month = "0" + month;
-  }
-
-  return month + "-" + day + "-" + year;
-}
 function generateModalUI(randomUser) {
-  removeElementByClass("modal-container");
-
   const modalDiv = document.createElement("div");
   modalDiv.classList = "modal-container";
   modalDiv.setAttribute("id", randomUser.profileId);
@@ -49,24 +34,14 @@ function generateModalUI(randomUser) {
         <div class="modal">
             <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
             <div class="modal-info-container">
-                <img class="modal-img" src="${
-                  randomUser.picture.medium
-                }" alt="profile picture">
-                <h3 id="name" class="modal-name cap">${
-                  randomUser.name.title
-                }. ${randomUser.name.first} ${randomUser.name.last}</h3>
+                <img class="modal-img" src="${randomUser.picture.medium}" alt="profile picture">
+                <h3 id="name" class="modal-name cap">${randomUser.name.title}. ${randomUser.name.first} ${randomUser.name.last}</h3>
                 <p class="modal-text">${randomUser.email}</p>
                 <p class="modal-text cap">${randomUser.location.city}</p>
                 <hr>
                 <p class="modal-text">${randomUser.cell}</p>
-                <p class="modal-text">${randomUser.location.street.number} ${
-    randomUser.location.street.name
-  }, ${randomUser.location.city}, ${randomUser.location.state} ${
-    randomUser.location.postcode
-  }</p>
-                <p class="modal-text">Birthday: ${formatDate(
-                  randomUser.dob.date
-                )}</p>
+                <p class="modal-text">${randomUser.location.street.number} ${randomUser.location.street.name}, ${randomUser.location.city}, ${randomUser.location.state} ${randomUser.location.postcode}</p>
+                <p class="modal-text">Birthday: ${randomUser.dob.date}</p>
             </div>
         </div>
 
@@ -96,11 +71,14 @@ function generateModalUI(randomUser) {
 }
 
 function generateGalleryUI(randomUsers) {
-  let cardId = 1;
+  console.log(typeof randomUsers);
+
+  let cardId = 0;
   randomUsers.map(randomUser => {
     randomUserArray.push(randomUser);
     const cardDiv = document.createElement("div");
     cardDiv.className = "card";
+    // cardDiv.id = cardId;
     cardDiv.setAttribute("id", cardId);
     randomUser.profileId = cardId;
     cardId++;
@@ -123,36 +101,21 @@ function generateGalleryUI(randomUsers) {
     });
   });
 }
-
-// add search ui
-let searchUI = `
-  <form action="#" method="get">
-      <input type="search" id="search-input" class="search-input" placeholder="Search...">
-      <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
-  </form>
-`;
-const searchDiv = document.querySelector(".search-container");
-searchDiv.innerHTML = searchUI;
 // END: Handle markup generation
 
 // BEGIN: Handle events
-
-// handle search
-searchDiv.addEventListener("input", e => {
-  if (e.target && e.target.id === "search-input") {
-    // console.log(galleryDiv);
-    // console.log(`you searched for: ${e.target.value}`);
-    galleryElements.forEach(el => {
-      console.log(el);
-    });
-  }
-});
 function showCard(profileId) {
-  const randomUsersLength = randomUserArray.length;
+  console.log("next" + parseInt(profileId, 10));
+  const id = parseInt(profileId, 10);
+  //   console.log(typeof id);
 
-  if (profileId > 0 && profileId <= randomUsersLength) {
-    generateModalUI(randomUserArray[profileId - 1]);
-  }
+  console.log(randomUsers.results[2]);
+
+  generateModalUI(randomUsers.results[id]);
+}
+
+function prevCard(profileId) {
+  console.log("previous");
 }
 // END: Handle events
 
